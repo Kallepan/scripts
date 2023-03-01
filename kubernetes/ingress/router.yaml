@@ -1,0 +1,37 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: stripapiprefix
+spec:
+  stripPrefix:
+    prefixes:
+      - /api
+      - /admin
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: example-ingress
+spec:
+  entryPoints:
+    - web
+  routes:
+  - match: Host(`example.k3s.home`) && PathPrefix(`/admin`)
+    kind: Rule
+    services:
+    - name: example-backend-service
+      port: 9000
+      passHostHeader: true 
+  - match: Host(`example.k3s.home`) && PathPrefix(`/api`)
+    kind: Rule
+    services:
+    - name: django-service
+      port: 9000
+      passHostHeader: true
+  - match: Host(`example.k3s.home`) && PathPrefix(`/`)
+    kind: Rule
+    services:
+    - name: example-frontend-service
+      port: 80
+    middlewares:
+      - name: stripapiprefix

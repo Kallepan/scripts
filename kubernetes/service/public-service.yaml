@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: example-frontend-service
+  labels:
+    app: example-container
+spec:
+  type: ClusterIP
+  selector:
+    app: example-container
+  ports:
+    - port: 80
+      targetPort: 80
+      protocol: TCP

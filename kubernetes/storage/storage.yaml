@@ -1,0 +1,32 @@
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: example-pv
+  namespace: scoar
+  labels:
+    type: local
+    app: example-container
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 2Gi
+  accessModes:
+    - ReadWriteMany
+  hostPath:
+    path: "/data/example-pv"
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: example-pvc
+  namespace: scoar
+  labels:
+    type: local
+    app: example-container
+spec:
+  storageClassName: manual
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 2Gi

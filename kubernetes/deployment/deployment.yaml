@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: example-deployment
+  labels:
+    app: example-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: example-app
+  template:
+    metadata:
+      labels:
+        app: example-app
+    spec:
+      containers:
+        - image: python:latest
+          imagePullPolicy: Always
+          name: example-app
+          envFrom:
+            - secretRef:
+                name: example-secrets
+            - configMapRef:
+                name: exmample-config
+          ports:
+            - containerPort: 9000
+              name: example-port
+          readinessProbe:
+            tcpSocket:
+              port: 9000
+            initialDelaySeconds: 30
+            timeoutSeconds: 5
